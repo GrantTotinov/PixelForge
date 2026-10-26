@@ -10,6 +10,13 @@ public interface IImageProcessingContext
     /// <returns>The current size.</returns>
     Size GetCurrentSize();
 
+    /// <summary>
+    /// Rotates and mirrors the image as its EXIF orientation says, so it displays upright. Call this before other
+    /// operations: PixelForge never writes metadata, so a saved image without it would show sideways.
+    /// </summary>
+    /// <returns>This context.</returns>
+    IImageProcessingContext AutoOrient();
+
     /// <summary>Scales to exactly this size. A zero width or height is computed from the aspect ratio.</summary>
     /// <param name="width">The new width.</param>
     /// <param name="height">The new height.</param>
