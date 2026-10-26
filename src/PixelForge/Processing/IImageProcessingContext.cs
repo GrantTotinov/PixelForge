@@ -32,4 +32,45 @@ public interface IImageProcessingContext
     /// <param name="options">The options.</param>
     /// <returns>This context.</returns>
     IImageProcessingContext Resize(ResizeOptions options);
+
+    /// <summary>Keeps the top-left <paramref name="width"/> × <paramref name="height"/> pixels.</summary>
+    /// <param name="width">The width to keep.</param>
+    /// <param name="height">The height to keep.</param>
+    /// <returns>This context.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">The area is empty or outside the image.</exception>
+    IImageProcessingContext Crop(int width, int height);
+
+    /// <summary>Keeps the pixels inside <paramref name="rectangle"/>.</summary>
+    /// <param name="rectangle">The area to keep; it must lie inside the image.</param>
+    /// <returns>This context.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">The area is empty or outside the image.</exception>
+    IImageProcessingContext Crop(Rectangle rectangle);
+
+    /// <summary>Rotates clockwise by a multiple of 90 degrees. Lossless.</summary>
+    /// <param name="rotateMode">The rotation.</param>
+    /// <returns>This context.</returns>
+    IImageProcessingContext Rotate(RotateMode rotateMode);
+
+    /// <summary>
+    /// Rotates clockwise by any angle. Multiples of 90 are lossless; other angles grow the canvas to fit and leave
+    /// transparent corners.
+    /// </summary>
+    /// <param name="degrees">The angle in degrees; negative is counterclockwise.</param>
+    /// <returns>This context.</returns>
+    IImageProcessingContext Rotate(float degrees);
+
+    /// <summary>Rotates clockwise by any angle, filling the uncovered corners with <paramref name="background"/>.</summary>
+    /// <param name="degrees">The angle in degrees; negative is counterclockwise.</param>
+    /// <param name="background">The corner fill color.</param>
+    /// <returns>This context.</returns>
+    IImageProcessingContext Rotate(float degrees, Color background);
+
+    /// <summary>Mirrors the image.</summary>
+    /// <param name="flipMode">The direction.</param>
+    /// <returns>This context.</returns>
+    IImageProcessingContext Flip(FlipMode flipMode);
+
+    /// <summary>Converts to grayscale using BT.709 luma weights. Alpha is kept.</summary>
+    /// <returns>This context.</returns>
+    IImageProcessingContext Grayscale();
 }
