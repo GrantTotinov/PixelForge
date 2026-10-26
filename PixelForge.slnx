@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/PixelForge/PixelForge.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/PixelForge.Tests/PixelForge.Tests.csproj" />
+  </Folder>
+</Solution>
