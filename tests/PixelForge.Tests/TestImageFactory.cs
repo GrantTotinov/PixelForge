@@ -47,6 +47,75 @@ internal static class TestImageFactory
         return Encode(bitmap, SKEncodedImageFormat.Jpeg, quality);
     }
 
+    public static byte[] Webp(int width, int height, int quality = 90)
+    {
+        using var bitmap = Quadrants(width, height);
+        return Encode(bitmap, SKEncodedImageFormat.Webp, quality);
+    }
+
+    /// <summary>24-bit bottom-up BMP filled with one color.</summary>
+    public static byte[] Bmp(int width, int height, SKColor color)
+    {
+        var rowSize = (width * 3 + 3) & ~3;
+        var pixelBytes = rowSize * height;
+        var bmp = new byte[54 + pixelBytes];
+        bmp[0] = (byte)'B';
+        bmp[1] = (byte)'M';
+        BinaryPrimitives.WriteInt32LittleEndian(bmp.AsSpan(2), bmp.Length);
+        BinaryPrimitives.WriteInt32LittleEndian(bmp.AsSpan(10), 54);
+        BinaryPrimitives.WriteInt32LittleEndian(bmp.AsSpan(14), 40);
+        BinaryPrimitives.WriteInt32LittleEndian(bmp.AsSpan(18), width);
+        BinaryPrimitives.WriteInt32LittleEndian(bmp.AsSpan(22), height);
+        BinaryPrimitives.WriteInt16LittleEndian(bmp.AsSpan(26), 1);
+        BinaryPrimitives.WriteInt16LittleEndian(bmp.AsSpan(28), 24);
+        BinaryPrimitives.WriteInt32LittleEndian(bmp.AsSpan(34), pixelBytes);
+        for (var y = 0; y < height; y++)
+        {
+            for (var x = 0; x < width; x++)
+            {
+                var i = 54 + (y * rowSize) + (x * 3);
+                bmp[i] = color.Blue;
+                bmp[i + 1] = color.Green;
+                bmp[i + 2] = color.Red;
+            }
+        }
+        return bmp;
+    }
+
+    /// <summary>1x1 GIF with two frames: white, then black.</summary>
+    public static byte[] TwoFrameGif() =>
+    [
+        .. "GIF89a"u8,
+        0x01, 0x00, 0x01, 0x00, 0x80, 0x00, 0x00,       // 1x1, global palette of 2 colors
+        0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00,             // white, black
+        .. GifFrame(0x44),                              // LZW: clear, index 0, end
+        .. GifFrame(0x4C),                              // LZW: clear, index 1, end
+        0x3B,
+    ];
+
+    private static byte[] GifFrame(byte lzw) =>
+    [
+        0x21, 0xF9, 0x04, 0x00, 0x0A, 0x00, 0x00, 0x00, // graphic control: 100 ms delay
+        0x2C, 0, 0, 0, 0, 0x01, 0x00, 0x01, 0x00, 0x00, // image descriptor 1x1
+        0x02, 0x02, lzw, 0x01, 0x00,
+    ];
+
+    /// <summary>ICO with a single PNG-encoded entry.</summary>
+    public static byte[] Ico(int size)
+    {
+        var png = Png(size, size);
+        var header = new byte[22];
+        BinaryPrimitives.WriteInt16LittleEndian(header.AsSpan(2), 1);   // type: icon
+        BinaryPrimitives.WriteInt16LittleEndian(header.AsSpan(4), 1);   // one image
+        header[6] = (byte)size;
+        header[7] = (byte)size;
+        BinaryPrimitives.WriteInt16LittleEndian(header.AsSpan(10), 1);  // planes
+        BinaryPrimitives.WriteInt16LittleEndian(header.AsSpan(12), 32); // bits per pixel
+        BinaryPrimitives.WriteInt32LittleEndian(header.AsSpan(14), png.Length);
+        BinaryPrimitives.WriteInt32LittleEndian(header.AsSpan(18), 22);
+        return [.. header, .. png];
+    }
+
     /// <summary>
     /// Inserts a minimal EXIF APP1 segment with the given orientation (1-8) right after SOI.
     /// </summary>

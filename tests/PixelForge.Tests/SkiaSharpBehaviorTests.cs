@@ -245,17 +245,4 @@ public class SkiaSharpBehaviorTests
             && Math.Abs(expected.Blue - actual.Blue) <= tolerance,
             $"Expected {expected}, got {actual}.");
     }
-
-    private sealed class NonSeekableStream(byte[] bytes) : MemoryStream(bytes)
-    {
-        public override bool CanSeek => false;
-
-        public override long Seek(long offset, SeekOrigin loc) => throw new NotSupportedException();
-
-        public override long Position
-        {
-            get => base.Position;
-            set => throw new NotSupportedException();
-        }
-    }
 }
