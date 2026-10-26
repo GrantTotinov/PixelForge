@@ -1,3 +1,4 @@
+using PixelForge.Processing;
 using SkiaSharp;
 
 namespace PixelForge;
@@ -28,6 +29,43 @@ public sealed partial class Image : IDisposable
 
     /// <summary>The EXIF orientation read at decode time. <c>AutoOrient()</c> applies it and resets it.</summary>
     internal SKEncodedOrigin Origin { get; set; }
+
+    /// <summary>Applies operations to this image in place.</summary>
+    /// <param name="operation">The operations, for example <c>x =&gt; x.AutoOrient().Resize(800, 0)</c>.</param>
+    public void Mutate(Action<IImageProcessingContext> operation)
+    {
+        ArgumentNullException.ThrowIfNull(operation);
+        var context = new ImageProcessingContext(Bitmap, Origin);
+        try
+        {
+            operation(context);
+        }
+        finally
+        {
+            // Operations dispose the bitmap they replace, so keep whatever the chain reached even on failure.
+            _bitmap = context.Bitmap;
+            Origin = context.Origin;
+        }
+    }
+
+    /// <summary>Applies operations to a copy and returns it. This image is not changed.</summary>
+    /// <param name="operation">The operations.</param>
+    /// <returns>The new image; dispose it when done.</returns>
+    public Image Clone(Action<IImageProcessingContext> operation)
+    {
+        ArgumentNullException.ThrowIfNull(operation);
+        var context = new ImageProcessingContext(Bitmap.Copy(), Origin);
+        try
+        {
+            operation(context);
+            return new Image(context.Bitmap, context.Origin);
+        }
+        catch
+        {
+            context.Bitmap.Dispose();
+            throw;
+        }
+    }
 
     /// <summary>Releases the pixel memory.</summary>
     public void Dispose()
