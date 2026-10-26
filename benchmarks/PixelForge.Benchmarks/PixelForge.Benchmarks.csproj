@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+    <!-- ImageSharp 3.1.12 has known advisories (that is the point of the comparison). Benchmark-only, never shipped. -->
+    <NoWarn>$(NoWarn);NU1901;NU1902;NU1903;NU1904</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" />
+    <PackageReference Include="SixLabors.ImageSharp" />
+    <PackageReference Include="NetVips" />
+    <PackageReference Include="NetVips.Native" />
+    <PackageReference Include="Magick.NET-Q8-AnyCPU" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\PixelForge\PixelForge.csproj" />
+  </ItemGroup>
+
+</Project>

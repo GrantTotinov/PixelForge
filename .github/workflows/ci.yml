@@ -34,6 +34,11 @@ jobs:
         run: dotnet format --verify-no-changes
       - if: matrix.os == 'ubuntu-latest'
         run: dotnet pack src/PixelForge -c Release --no-build -o artifacts
+      - if: matrix.os == 'ubuntu-latest'
+        name: Build benchmarks (outside the solution because of large native packages)
+        run: |
+          dotnet build benchmarks/PixelForge.Benchmarks -c Release -warnaserror
+          dotnet format benchmarks/PixelForge.Benchmarks/PixelForge.Benchmarks.csproj --verify-no-changes
 
   alpine:
     name: alpine (musl x64)
