@@ -212,6 +212,15 @@ public class ImageLoadTests
     }
 
     [Fact]
+    public void TargetSize_decodes_webp_smaller_but_covering_the_target()
+    {
+        using var image = Image.Load(TestImageFactory.Webp(800, 600), new DecoderOptions { TargetSize = new Size(200, 150) });
+
+        Assert.Equal(new Size(200, 150), image.Size);
+        ResizeTests.AssertClose(SKColors.Red, image.Bitmap.GetPixel(10, 10));
+    }
+
+    [Fact]
     public void TargetSize_is_ignored_for_png()
     {
         using var image = Image.Load(TestImageFactory.Png(800, 600), new DecoderOptions { TargetSize = new Size(100, 100) });
