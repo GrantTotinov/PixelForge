@@ -9,10 +9,13 @@
     <Description>MIT image processing for .NET on SkiaSharp. Familiar Load/Mutate/Resize/Save API, no license key, safe defaults for user uploads.</Description>
     <PackageTags>image;imaging;resize;thumbnail;skia;skiasharp;jpeg;png;webp</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>icon.png</PackageIcon>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
 
   <ItemGroup>
     <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+    <None Include="..\..\icon.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup>

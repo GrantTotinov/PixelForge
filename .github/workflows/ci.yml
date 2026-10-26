@@ -47,3 +47,25 @@ jobs:
       - run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
       - run: dotnet build -c Release -warnaserror
       - run: dotnet test -c Release --no-build
+
+  docker:
+    name: docker sample (${{ matrix.variant || 'debian' }})
+    strategy:
+      fail-fast: false
+      matrix:
+        variant: ['', '-alpine']
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - run: docker build -f samples/UploadApi/Dockerfile --build-arg VARIANT=${{ matrix.variant }} -t uploadapi .
+      - run: docker run -d -p 8080:8080 --name uploadapi uploadapi
+      - name: Smoke test
+        run: |
+          for i in $(seq 1 30); do curl -sf http://localhost:8080/ > /dev/null && break; sleep 1; done
+          code=$(curl -s -o thumb.webp -w '%{http_code}' -F file=@samples/UploadApi/sample.jpg http://localhost:8080/thumbnail)
+          test "$code" = 200
+          test "$(head -c 4 thumb.webp)" = RIFF
+          code=$(curl -s -o /dev/null -w '%{http_code}' -F file=@README.md http://localhost:8080/thumbnail)
+          test "$code" = 400
+      - if: failure()
+        run: docker logs uploadapi
