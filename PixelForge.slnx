@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/samples/">
+    <Project Path="samples/UploadApi/UploadApi.csproj" />
+  </Folder>
   <Folder Name="/src/">
     <Project Path="src/PixelForge/PixelForge.csproj" />
   </Folder>
