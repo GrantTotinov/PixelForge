@@ -31,7 +31,7 @@ image.SaveAsWebp("photo.webp", quality: 80);
   - Decompression bombs are rejected from the header before any pixel memory is allocated (`MaxPixels`, default 100 MP).
   - Input size is capped (`MaxBytes`).
   - EXIF metadata, including GPS location, is never written to output.
-  - See [docs/security.md](docs/security.md).
+  - See [docs/security.md](https://github.com/GrantTotinov/PixelForge/blob/main/docs/security.md).
 - **Fast thumbnails.** `DecoderOptions.TargetSize` decodes JPEG and WebP directly at reduced size. See [benchmarks](#benchmarks).
 - **Runs everywhere .NET runs on servers.** Windows, macOS, Debian/Ubuntu and Alpine containers, x64 and arm64, with no `apt-get` or `apk add`. CI checks every one of these.
 - **Two dependencies:** `SkiaSharp` and its Linux native assets.
@@ -60,7 +60,7 @@ app.MapPost("/thumbnail", async (IFormFile file, CancellationToken ct) =>
 }).DisableAntiforgery();
 ```
 
-Full sample with Dockerfiles for Debian and Alpine: [samples/UploadApi](samples/UploadApi).
+Full sample with Dockerfiles for Debian and Alpine: [samples/UploadApi](https://github.com/GrantTotinov/PixelForge/tree/main/samples/UploadApi).
 
 ## Features
 
@@ -72,7 +72,7 @@ Full sample with Dockerfiles for Debian and Alpine: [samples/UploadApi](samples/
 | **Operations** | `AutoOrient`, `Resize` (`Crop`, `Pad`, `Max`, `Min`, `Stretch` + anchor), `Crop`, `Rotate`, `Flip`, `Grayscale` |
 | **Limits** | `MaxPixels`, `MaxBytes`, `TargetSize` |
 
-Not included: pixel access, drawing and text, metadata editing, animation, TIFF. See the [full list](docs/migrating-from-imagesharp.md#not-supported). Open an issue if you need one of these.
+Not included: pixel access, drawing and text, metadata editing, animation, TIFF. See the [full list](https://github.com/GrantTotinov/PixelForge/blob/main/docs/migrating-from-imagesharp.md#not-supported). Open an issue if you need one of these.
 
 ## Coming from ImageSharp?
 
@@ -91,7 +91,7 @@ For most upload and thumbnail code you change only the `using` lines and the enc
 +await image.SaveAsJpegAsync(output, 80);
 ```
 
-The [migration guide](docs/migrating-from-imagesharp.md) has the full mapping table and the differences in behavior.
+The [migration guide](https://github.com/GrantTotinov/PixelForge/blob/main/docs/migrating-from-imagesharp.md) has the full mapping table and the differences in behavior.
 
 ## Benchmarks
 
@@ -110,7 +110,7 @@ Decode a 4000×3000 JPEG (2.9 MB, quality 90), resize, encode JPEG quality 75 to
 | NetVips 3.2.0 | **85.6 ms** | 33.3 ms | 9.6 KB |
 | Magick.NET-Q8 15.0.0 | 444.3 ms | 36.8 ms | 12.8 KB |
 
-BenchmarkDotNet 0.15.8, .NET 10.0.11, Windows 11, AMD Ryzen 5 5500U (6 cores / 12 threads). Source: [benchmarks/PixelForge.Benchmarks](benchmarks/PixelForge.Benchmarks/ResizeBenchmarks.cs).
+BenchmarkDotNet 0.15.8, .NET 10.0.11, Windows 11, AMD Ryzen 5 5500U (6 cores / 12 threads). Source: [benchmarks/PixelForge.Benchmarks](https://github.com/GrantTotinov/PixelForge/blob/main/benchmarks/PixelForge.Benchmarks/ResizeBenchmarks.cs).
 
 How to read this:
 
@@ -124,8 +124,8 @@ Run it yourself: `dotnet run -c Release --project benchmarks/PixelForge.Benchmar
 
 ## Contributing
 
-Issues and pull requests are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md) first. Report security problems privately as described in [SECURITY.md](SECURITY.md).
+Issues and pull requests are welcome. Please read [CONTRIBUTING.md](https://github.com/GrantTotinov/PixelForge/blob/main/CONTRIBUTING.md) first. Report security problems privately as described in [SECURITY.md](https://github.com/GrantTotinov/PixelForge/blob/main/SECURITY.md).
 
 ## License
 
-[MIT](LICENSE). SkiaSharp is MIT; Skia is BSD-3-Clause.
+[MIT](https://github.com/GrantTotinov/PixelForge/blob/main/LICENSE). SkiaSharp is MIT; Skia is BSD-3-Clause.
